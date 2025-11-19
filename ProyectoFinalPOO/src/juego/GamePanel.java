@@ -65,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable{
         mundo.agregarCuerpo(bolaBlanca);
 
         // Crea el taco
-        taco = new Taco(bolaBlanca);
+        taco = new Taco(bolaBlanca, Material.MADERA);
     }
 
     // Inicia el hilo del juego, el cual ejecuta el game loop

@@ -1,11 +1,14 @@
 package juego;
 
 import fisica.main.Bola;
+import fisica.main.Material;
 import fisica.main.Vec2D;
 import java.awt.*;
 
 public class Taco{
     private final Bola blanca;
+    private final Material material;
+
     private double power = 0.0;
     private boolean charging = false;
 
@@ -21,8 +24,9 @@ public class Taco{
     // Grosor visual del taco al dibujarlo, usado en el trazo de la línea.
     private final double grosorTaco = 6.0;
 
-    public Taco(Bola blanca){
+    public Taco(Bola blanca, Material material){
         this.blanca = blanca;
+        this.material = material;
     }
 
     // Manejar carga y disparo con el mouse
@@ -48,8 +52,13 @@ public class Taco{
             if (L < 1e-6) dir = Vec2D.crearVector(1, 0); 
             else dir = dir.escalarXVector(1.0 / L);
 
+            // para no "inventar" fuerzas sin sentido, se utiliza el material al momento del contacto
+            double factorMaterial = material.getRestitucion();
+            double impulso = power * factorMaterial;
+            
+            
             // aplicar IMPULSO a la blanca
-            blanca.aplicarImpulso(dir.escalarXVector(power));
+            blanca.aplicarImpulso(dir.escalarXVector(impulso));
 
             // reset estado
             charging = false;

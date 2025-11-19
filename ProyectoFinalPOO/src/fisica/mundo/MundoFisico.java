@@ -4,6 +4,8 @@ import fisica.colision_basica.*;
 import fisica.main.Bola;
 import fisica.main.Cuerpo;
 import fisica.main.Mesa;
+import fisica.main.Tronera;
+import fisica.main.Vec2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,26 @@ public class MundoFisico {
     // Devuelve una copia de la lista de cuerpos para evitar modificaciones externas directas.
     public List<Cuerpo> getCuerpos(){
         return new java.util.ArrayList<>(cuerpos);
+    }
+
+    public void detectarTroneras(){
+        List<Cuerpo> eliminar = new ArrayList();
+        for (Cuerpo c : cuerpos){
+            if (!(c instanceof Bola bola)) continue;
+            for (Tronera t : mesaBillar.getAgujeros()){
+                if (t.contieneBola(bola)){
+                    if ("blanca".equals(bola.getId())){
+                        Vec2D reinicioBolaBlanca = Vec2D.crearVector(120, 576/2.0);
+                        bola.setPosicion(reinicioBolaBlanca);
+                        bola.setVel(Vec2D.crearVectorNulo());
+                    }else{
+                        eliminar.add(bola);
+                    }
+                    break;
+                }
+            }
+        }
+        if (!eliminar.isEmpty()) cuerpos.removeAll(eliminar);
     }
 
     // Avanza la simulación física del mundo una cantidad de tiempo dada.
@@ -53,5 +75,6 @@ public class MundoFisico {
                 }
             }
         }
+        detectarTroneras();
     }
 }
