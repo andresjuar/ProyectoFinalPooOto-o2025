@@ -5,9 +5,9 @@ import fisica.main.Vec2D;
 
 public class ContactoColision{
     public final Cuerpo A, B;
-    public Vec2D normalColision = Vec2D.crearVectorNulo();
-    public double profundidadPenetracion = 0.0;
-    public double velocidadRelativaNormal = 0.0;
+    public Vec2D vectorNormal = Vec2D.crearVectorNulo();
+    public double traslape = 0.0;
+    public double proyVelocidadRelEnNormal = 0.0;
 
     public ContactoColision(Cuerpo A, Cuerpo B){
         this.A = A;

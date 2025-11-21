@@ -22,7 +22,7 @@ public class Taco{
     private final double longitudTaco = 80.0;
 
     // Grosor visual del taco al dibujarlo, usado en el trazo de la línea.
-    private final double grosorTaco = 6.0;
+    private final double grosorTaco = 10.0;
 
     public Taco(Bola blanca, Material material){
         this.blanca = blanca;

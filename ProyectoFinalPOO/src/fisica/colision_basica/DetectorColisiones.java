@@ -54,13 +54,36 @@ public class DetectorColisiones {
 
         // Si alguna penetración es positiva, hubo colisión contra alguna pared.
         if (maxPen > 0){
-            m.normalColision = colisionNormal; // Normal de colisión usada para corregir la posición de la bola.
-            m.profundidadPenetracion = maxPen; // Qué tanto se ha metido dentro de la pared.
+            m.vectorNormal = colisionNormal; // Normal de colisión usada para corregir la posición de la bola.
+            m.traslape = maxPen; // Qué tanto se ha metido dentro de la pared.
             // vRel = vB - vA; para pared vB=0 -> vRel = -vA
-            m.velocidadRelativaNormal = -c.getVel().productoPunto(colisionNormal);
+            m.proyVelocidadRelEnNormal = -c.getVel().productoPunto(colisionNormal);
             return true;
         }
         // No se detectó colisión con ninguna pared.
         return false;
+    }
+
+    public static boolean bolaVsBola(Bola a, Bola b, ContactoColision contacto){
+        // Vector que va desde el centro de A al centro de B
+        Vec2D vectorCentroA2CentroB = b.getPosicion().restaVectores(a.getPosicion());
+
+        // Distancia entre los centros
+        double distanciaEntreCentros = vectorCentroA2CentroB.magnitudVector();
+        double sumaDeRadios = a.getRadio() + b.getRadio();
+
+        // Si la distancia entre radios es mayor o igual que la suma de sus radios,
+        // no existe colisión
+        if (distanciaEntreCentros >= sumaDeRadios) return false;
+
+        // Colisión
+        contacto.vectorNormal = (distanciaEntreCentros == 0) ? Vec2D.crearVector(1, 0) : vectorCentroA2CentroB.escalarXVector(1.0/distanciaEntreCentros);
+        
+        // Contacto
+        contacto.traslape = sumaDeRadios - distanciaEntreCentros;
+
+        // Cálculo de la velocidad relativa, proyectada sobre la normal
+        contacto.proyVelocidadRelEnNormal = b.getVel().restaVectores(a.getVel()).productoPunto(contacto.vectorNormal);
+        return true;
     }
 }
