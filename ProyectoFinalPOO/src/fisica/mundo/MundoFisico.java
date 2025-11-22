@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MundoFisico {
     private final List<Cuerpo> cuerpos = new ArrayList<>();
-    private final Integrador integrador = new IntegradorSemiImplicito();
+    private final Integrador integrador = (obj, dt) -> obj.actualizar(dt);
     private Mesa mesaBillar;
 
     // Establece la mesa principal del mundo físico y la registra como cuerpo.
@@ -30,23 +30,28 @@ public class MundoFisico {
         return new java.util.ArrayList<>(cuerpos);
     }
 
+    // Función detecta si alguna de las bolas entra en una tronera para quitarla del mundo, en caso de la bola blanca
+    // reinicia a su posición inicial
     public void detectarTroneras(){
-        List<Cuerpo> eliminar = new ArrayList();
+        List<Cuerpo> eliminar = new ArrayList<>();
         for (Cuerpo c : cuerpos){
             if (!(c instanceof Bola bola)) continue;
             for (Tronera t : mesaBillar.getAgujeros()){
                 if (t.contieneBola(bola)){
                     if ("blanca".equals(bola.getId())){
+                        // Posición "nueva" de la bola blanca
                         Vec2D reinicioBolaBlanca = Vec2D.crearVector(120, 576/2.0);
                         bola.setPosicion(reinicioBolaBlanca);
                         bola.setVel(Vec2D.crearVectorNulo());
                     }else{
+                        /// Se agrega a la lista las bolas que entraron en alguna tronera
                         eliminar.add(bola);
                     }
                     break;
                 }
             }
         }
+        // En caso de que la lista no este vacía, eliminará del mundo todas las bolas en la lista
         if (!eliminar.isEmpty()) cuerpos.removeAll(eliminar);
     }
 
@@ -74,7 +79,18 @@ public class MundoFisico {
                     ResolverColisiones.resolver(contactoConMesa);
                 }
             }
+
+            for (int indiceCuerpoB = indiceCuerpoA + 1; indiceCuerpoB <  cantidadCuerpos; indiceCuerpoB++){
+                Cuerpo cuerpoB = cuerpos.get(indiceCuerpoB);
+                if (cuerpoA instanceof Bola bolaA && cuerpoB instanceof Bola bolaB){
+                    ContactoColision contactoEnteBolas = new ContactoColision(bolaA, bolaB);
+                    if(DetectorColisiones.bolaVsBola(bolaA, bolaB, contactoEnteBolas)){
+                        ResolverColisiones.resolver(contactoEnteBolas);
+                    }
+                }
+            }
         }
+        // Si alguna bola llegará a entrar en alguna tronera esta función la quita de la mesa
         detectarTroneras();
     }
 }

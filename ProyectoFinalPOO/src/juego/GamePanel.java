@@ -64,6 +64,90 @@ public class GamePanel extends JPanel implements Runnable{
         bolaBlanca.setColor(Color.WHITE);
         mundo.agregarCuerpo(bolaBlanca);
 
+        // Creación de las demas bolas para el juego
+        Bola bolaUno, bolaDos, bolaTres, bolaCuatro, bolaCinco, bolaSeis, bolaSiete;
+        Bola bolaOcho;
+        Bola bolaNueve, bolaDiez, bolaOnce, bolaDoce, bolaTrece, bolaCatorce, bolaQuince;
+
+        // Acomodo e inicialización de bolas
+        double inicioTrianguloX = mesa.getBordeDerecho() - 200;
+        double inicioTrianguloY = screenHeight / 2.0;
+        for (int fila = 0; fila < 5; fila++){
+            for (int j = 0; j <= fila; j++){
+                double x = inicioTrianguloX + fila * (radio * 2 + 1);
+                double y = inicioTrianguloY - (fila*radio) + j * (radio * 2 + 1);
+                if (fila == 0){
+                    bolaUno = new Bola("uno", masaBola, radio, Vec2D.crearVector(x, y));
+                    bolaUno.setMaterial(Material.CAUCHO);
+                    mundo.agregarCuerpo(bolaUno);
+                }else if(fila == 1){
+                    if (j == 0){
+                        bolaDos = new Bola("dos", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaDos.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaDos);
+                    }else if(j == 1){
+                        bolaTres = new Bola("tres", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaTres.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaTres);
+                    }
+                }else if (fila == 2){
+                    if(j == 0){
+                        bolaCuatro = new Bola("cuatro", masaBola, radio, Vec2D.crearVector(x,y));
+                        bolaCuatro.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaCuatro);
+                    }else if(j == 1){
+                        bolaOcho = new Bola("ocho", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaOcho.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaOcho);
+                    }else if (j == 2){
+                        bolaCinco = new Bola("cinco", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaCinco.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaCinco);
+                    }
+                }else if(fila == 3){
+                    if(j == 0){
+                        bolaSeis = new Bola("seis", masaBola, radio, Vec2D.crearVector(x,y));
+                        bolaSeis.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaSeis);
+                    }else if(j == 1){
+                        bolaSiete = new Bola("siete", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaSiete.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaSiete);
+                    }else if (j == 2){
+                        bolaNueve = new Bola("nueve", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaNueve.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaNueve);
+                    }else if(j == 3){
+                        bolaDiez = new Bola("diez", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaDiez.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaDiez);
+                    }
+                }else if(fila == 4){
+                    if(j == 0){
+                        bolaOnce = new Bola("once", masaBola, radio, Vec2D.crearVector(x,y));
+                        bolaOnce.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaOnce);
+                    }else if(j == 1){
+                        bolaDoce = new Bola("doce", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaDoce.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaDoce);
+                    }else if (j == 2){
+                        bolaTrece = new Bola("trece", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaTrece.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaTrece);
+                    }else if(j == 3){
+                        bolaCatorce = new Bola("catorce", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaCatorce.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaCatorce);
+                    }else if(j == 4){
+                        bolaQuince = new Bola("quince", masaBola, radio, Vec2D.crearVector(x, y));
+                        bolaQuince.setMaterial(Material.CAUCHO);
+                        mundo.agregarCuerpo(bolaQuince);
+                    }
+
+                }
+            }
+        }
         // Crea el taco
         taco = new Taco(bolaBlanca, Material.MADERA);
     }
@@ -107,6 +191,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
         return true;
     }
+
 
     // Actualiza el estado del juego en cada frame lógico:
     public void update(){
