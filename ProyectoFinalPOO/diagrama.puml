@@ -1,0 +1,99 @@
+@startuml Proyecto_POO
+skinparam classAttributeIconSize 0
+
+
+package fisica {
+    package colision_basica{
+        class ContactoColision {
+            + A : Cuerpo
+            + B : Cuerpo
+            + vectorNormal : Vec2D
+            + traslape : double
+            + proyVelocidadRelEnNormal : double
+            + ContactoColision(A : Cuerpo, B : Cuerpo)
+        }
+        class DetectorColisiones{
+            + bolaVsMesa(c : Bola, mesa : Mesa, m : ContactoColision) : boolean <<static>>
+            + bolaVsBola(a : Bola, b : Bola, contacto : ContactoColision) : boolean <<static>>
+        }
+        class ResolverColisiones {
+
+            + resolver(m : ContactoColision) : void <<static>>
+        }
+    }
+    package main {
+        class Bola {
+            - radio : double
+            - color : Color
+            /' - uno : BufferedImage
+            - dos : BufferedImage
+            - tres : BufferedImage
+            - cuatro : BufferedImage
+            - cinco : BufferedImage
+            - seis : BufferedImage
+            - siete : BufferedImage
+            - ocho : BufferedImage
+            - nueve : BufferedImage
+            - diez : BufferedImage
+            - once : BufferedImage
+            - doce : BufferedImage
+            - trece : BufferedImage
+            - catorce : BufferedImage
+            - quince : BufferedImage
+            - blanca : BufferedImage '/
+
+            + Bola(id : String, masa : double, radio : double, posInicial : Vec2D)
+            + getRadio() : double
+            + setColor(c : Color) : void
+            + getImageBola() : void
+            + draw(g : Graphics2D) : void
+        }
+
+        class Cuerpo{}
+        class Material{}
+        class Mesa{}
+        class TipoDeObjeto{}
+        class Tronera{}
+        class Vec2D{}
+    }
+
+    package mundo {
+        class Actualizable{}
+        class AplicarFuerza{}
+        class Config{}
+        class Integrador{}
+        class MundoFisico{}
+    }
+}
+
+package juego {
+    class GamePanel {
+
+    }
+
+
+}
+
+' Herencia
+Cuerpo <|-- Bola
+
+' Relaciones con otras clases
+Bola --> Vec2D : usa
+Bola --> Color : usa
+Bola --> BufferedImage : texturas
+Bola --> Graphics2D : dibuja
+
+ContactoColision --> Cuerpo : usa
+ContactoColision --> Vec2D : usa
+
+DetectorColisiones --> Bola : usa
+DetectorColisiones --> Mesa : usa
+DetectorColisiones --> ContactoColision : modifica
+DetectorColisiones --> Vec2D : usa
+
+ResolverColisiones --> ContactoColision : usa
+ResolverColisiones --> Cuerpo : usa
+ResolverColisiones --> Vec2D : usa
+ResolverColisiones --> Config : usa
+
+@enduml
