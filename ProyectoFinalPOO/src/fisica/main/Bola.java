@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 
 public class Bola extends Cuerpo {
     private final double radio;
+    private TipoBola tipo;
     private Color color = Color.WHITE;
 
     // Atributos para el diseño de las bolas
@@ -18,6 +19,7 @@ public class Bola extends Cuerpo {
         super(id, masa);
         this.radio = radio;
         this.posicion = posInicial.clone();
+        this.tipo = setTipoBola(id);
         getImageBola();
     }
 
@@ -31,8 +33,39 @@ public class Bola extends Cuerpo {
         this.color = c;
     }
 
+    // Define el tipo de bola dependiendo del id de la bola
+    private TipoBola setTipoBola(String id){
+        if ("blanca".equals(id)) return TipoBola.BLANCA;
+        if ("ocho".equals(id)) return TipoBola.OCHO;
 
-    public void getImageBola(){
+        switch(id){
+            case "uno":
+            case "dos":
+            case "tres":
+            case "cuatro":
+            case "cinco":
+            case "seis":
+            case "siete":
+                return TipoBola.LISA;
+            case "nueve":
+            case "diez":
+            case "once":
+            case "doce":
+            case "trece":
+            case "catorce":
+            case "quince":
+                return TipoBola.RAYADA;
+            default:
+                throw new IllegalArgumentException("Id de bola no válido: " + id);
+                
+        }
+    }
+
+    public TipoBola getTipo(){
+        return tipo;
+    }
+
+    private void getImageBola(){
         try{
             
 
