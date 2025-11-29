@@ -8,7 +8,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Window;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class GamePanel extends JPanel implements Runnable{
     // CONFIGURACIÓN DE PANTALLA
@@ -16,9 +19,9 @@ public class GamePanel extends JPanel implements Runnable{
     final int scale = 3;
 
     public final int titleSize = originalTitleSize * scale; //48*48
-    final int maxScreenCol = 16;
+    final int maxScreenCol = 18;
     final int maxScreenRow = 12;
-    final int screenWidth = titleSize * maxScreenCol; // 768 pixeles
+    final int screenWidth = titleSize * maxScreenCol; // 864 pixeles
     final int screenHeight = titleSize * maxScreenRow; // 576 pixeles
 
     int FPS = 60;
@@ -28,6 +31,9 @@ public class GamePanel extends JPanel implements Runnable{
     MundoFisico mundo = new MundoFisico();
     Bola bolaBlanca;
     Mesa mesa;
+    
+    PartidaBillar partida = new PartidaBillar();
+    boolean antesQuietas = true;
 
     final MouseHandler mouse = new MouseHandler();
     Taco taco;
@@ -43,14 +49,23 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true); // Permite recibir eventos de teclado si se usan.
 
        inicializarMundo();
+       conectarEventosTronera();
 
     }
 
     // Inicia el mundo físico: crea la mesa, bola, asigna material y color
     public void inicializarMundo(){
-        int margen = 20;
+        int margenExterior = 20;
+        int anchoPanelInfo = 140;
+
+        double xMesa = margenExterior + anchoPanelInfo;
+        double yMesa = margenExterior;
+        
+        double anchoMesa = screenWidth - xMesa - margenExterior;
+        double altoMesa = screenHeight - 2 * margenExterior;
+
         // Crear mesa centrada con un margen alrededor.
-        mesa = new Mesa("mesa", 1, screenWidth - 2*margen, screenHeight - 2*margen , Vec2D.crearVector(margen,margen));
+        mesa = new Mesa("mesa", 1, anchoMesa, altoMesa , Vec2D.crearVector(xMesa, yMesa));
         mesa.crearMesaBillar(16); // Crea las troneras
         mundo.setMesaBillar(mesa); // Agrega la mesa al mundo
 
@@ -59,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable{
         double radio = 12; //pixeles en pantalla
 
         // Creación de la bola blanca
-        bolaBlanca = new Bola("blanca", masaBola, radio, Vec2D.crearVector(margen+100,screenHeight/2.0));
+        bolaBlanca = new Bola("blanca", masaBola, radio, Vec2D.crearVector(xMesa + 100,screenHeight/2.0));
         bolaBlanca.setMaterial(Material.CAUCHO);
         bolaBlanca.setColor(Color.WHITE);
         mundo.agregarCuerpo(bolaBlanca);
@@ -152,6 +167,14 @@ public class GamePanel extends JPanel implements Runnable{
         taco = new Taco(bolaBlanca, Material.MADERA);
     }
 
+    private void conectarEventosTronera(){
+        mundo.setEventoTroneraListener(bola -> onBolaEmbolsada(bola));
+    }
+
+    private void onBolaEmbolsada(Bola bola){
+        partida.registrasBolaEnTronera(bola);
+    }
+
     // Inicia el hilo del juego, el cual ejecuta el game loop
     public void startGameThread(){
         gameThread = new Thread(this);
@@ -196,9 +219,139 @@ public class GamePanel extends JPanel implements Runnable{
     // Actualiza el estado del juego en cada frame lógico:
     public void update(){
         boolean puedeTirar = todasDormidas();
-        if (taco!= null) taco.update(Config.DELTA_TIME, mouse, puedeTirar);
+        if (taco!= null && !partida.isPartidaTerminada()) taco.update(Config.DELTA_TIME, mouse, puedeTirar);
         mundo.actualizarSimulacion(Config.DELTA_TIME);
+
+        boolean ahoraQuietas = todasDormidas();
+
+        if(!antesQuietas && ahoraQuietas) procesarFinDeTiro();
+
+        antesQuietas = ahoraQuietas;
     }
+
+    private void procesarFinDeTiro(){
+        Jugador ganador = partida.finDeTiro();
+        if (ganador != null){
+            terminarPartida(ganador);
+        }
+    }
+
+    public void terminarPartida(Jugador ganador){
+        Jugador perdedor = (ganador == partida.getJugador1()) ? partida.getJugador2() : partida.getJugador1();
+        String mensaje = "Juego terminado\n\nGanador: " + ganador.getNombre()
+            + "\nPerdedor: " + perdedor.getNombre();
+
+        String[] opciones = {"Volver a jugar", "Salir"};
+
+        int seleccion = JOptionPane.showOptionDialog(
+                this,
+                mensaje,
+                "Juego terminado",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+        );
+
+        if (seleccion == 0) {
+            reiniciarPartida();
+        } else {
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                window.dispose();
+            } else {
+                System.exit(0);
+            }
+        }
+    }
+
+    private void reiniciarPartida() {
+        // Resetear el mundo físico
+        mundo = new MundoFisico();
+        bolaBlanca = null;
+        mesa = null;
+        taco = null;
+
+        // Resetear las reglas del juego (jugadores, grupos, conteos)
+        partida.reiniciar();
+
+        // Volver a armar todo
+        inicializarMundo();
+        conectarEventosTronera();
+    }
+
+    // Metodos para interfaz de informacion de juego
+    private String textoTipo(GrupoBola grupo) {
+        return switch (grupo) {
+            case SIN_ASIGNAR -> "Sin asignar";
+            case LISAS      -> "Lisas";
+            case RAYADAS    -> "Rayadas";
+        };
+    }
+
+    private void dibujarPanelInfo(Graphics2D g2) {
+        if (mesa == null) return;
+
+        int x = 10;
+        int y = 40;
+        int ancho = (int) mesa.getBordeIzquierdo() - 2 * x;
+        int alto = screenHeight - 80;
+
+        if (ancho <= 0) return;
+
+        // Fondo
+        g2.setColor(new Color(0, 0, 0, 180));
+        g2.fillRoundRect(x, y, ancho, alto, 20, 20);
+
+        // Borde
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(x, y, ancho, alto, 20, 20);
+
+        int textoX = x + 15;
+        int textoY = y + 30;
+
+        g2.drawString("Información del juego", textoX, textoY);
+        textoY += 30;
+
+        Jugador j1 = partida.getJugador1();
+        Jugador j2 = partida.getJugador2();
+
+        // Jugador 1
+        g2.drawString(j1.getNombre(), textoX, textoY);
+        textoY += 18;
+        g2.drawString("Tipo: " + textoTipo(j1.getGrupo()), textoX, textoY);
+        textoY += 18;
+        g2.drawString("Bolas restantes: " + partida.getBolasRestantes(j1), textoX, textoY);
+
+        textoY += 30;
+
+        // Jugador 2
+        g2.setColor(Color.WHITE);
+        g2.drawString(j2.getNombre(), textoX, textoY);
+        textoY += 18;
+        g2.drawString("Tipo: " + textoTipo(j2.getGrupo()), textoX, textoY);
+        textoY += 18;
+        g2.drawString("Bolas restantes: " + partida.getBolasRestantes(j2), textoX, textoY);
+
+        textoY += 30;
+
+        // Turno actual
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.drawString("Turno actual:", textoX, textoY);
+        textoY += 18;
+
+        if (!partida.isPartidaTerminada()) {
+            g2.setColor(new Color(255, 215, 0));
+            g2.drawString(partida.getJugadorActual().getNombre(), textoX, textoY);
+        } else {
+            g2.setColor(Color.RED);
+            g2.drawString("Partida terminada", textoX, textoY);
+        }
+    }
+
+
 
     // Estandar en JPanel
     // Dibuja todos los elementos del juego:
@@ -227,6 +380,8 @@ public class GamePanel extends JPanel implements Runnable{
         (int)(mesa.getBordeDerecho() - mesa.getBordeIzquierdo()), 
         (int)(mesa.getBordeInferior() - mesa.getBordeSuperior()));
         
+
+        dibujarPanelInfo(g2);
         //Dibujo de las Bolas
         for (Cuerpo c : mundo.getCuerpos()){
             if (c instanceof Bola bola){

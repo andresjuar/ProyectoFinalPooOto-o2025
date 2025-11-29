@@ -3,6 +3,7 @@ package fisica.mundo;
 import fisica.colision_basica.*;
 import fisica.main.Bola;
 import fisica.main.Cuerpo;
+import fisica.main.EventoTroneraListener;
 import fisica.main.Mesa;
 import fisica.main.Tronera;
 import fisica.main.Vec2D;
@@ -13,6 +14,7 @@ public class MundoFisico {
     private final List<Cuerpo> cuerpos = new ArrayList<>();
     private final Integrador integrador = (obj, dt) -> obj.actualizar(dt);
     private Mesa mesaBillar;
+    private EventoTroneraListener eventoTroneraListener;
 
     // Establece la mesa principal del mundo físico y la registra como cuerpo.
     public void setMesaBillar(Mesa m){
@@ -30,6 +32,10 @@ public class MundoFisico {
         return new java.util.ArrayList<>(cuerpos);
     }
 
+    public void setEventoTroneraListener(EventoTroneraListener listener){
+        this.eventoTroneraListener = listener;
+    }
+
     // Función detecta si alguna de las bolas entra en una tronera para quitarla del mundo, en caso de la bola blanca
     // reinicia a su posición inicial
     public void detectarTroneras(){
@@ -38,9 +44,15 @@ public class MundoFisico {
             if (!(c instanceof Bola bola)) continue;
             for (Tronera t : mesaBillar.getAgujeros()){
                 if (t.contieneBola(bola)){
+
+                    // Se noticia al juego que la bola cayó en una tronera
+                    if (eventoTroneraListener != null){
+                        eventoTroneraListener.bolaEmbolsada(bola);
+                    }
+
                     if ("blanca".equals(bola.getId())){
                         // Posición "nueva" de la bola blanca
-                        Vec2D reinicioBolaBlanca = Vec2D.crearVector(120, 576/2.0);
+                        Vec2D reinicioBolaBlanca = Vec2D.crearVector(260, 576/2.0);
                         bola.setPosicion(reinicioBolaBlanca);
                         bola.setVel(Vec2D.crearVectorNulo());
                     }else{
