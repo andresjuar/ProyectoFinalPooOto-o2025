@@ -5,20 +5,51 @@ import libreria.interfaces.BordesDelimitados;
 import libreria.interfaces.CuerpoCircular;
 import libreria.matematicas.Vec2D;
 
+/**
+ * Clase estática responsable de detectar colisiones entre diferentes tipos de
+ * formas geométricas.
+ * <p>
+ * Los métodos devuelven {@code true} si se detecta una colisión y rellenan el
+ * objeto
+ * {@code ContactoColision} con los datos necesarios (normal, traslape,
+ * velocidad relativa).
+ * </p>
+ *
+ * @author Eduardo Villar, Andres Juarez
+ */
+
 public class DetectorColisiones {
-    // Detecta si existe una colisión entre una bola y las paredes de la mesa.
-    public static boolean circuloVsBordes(CuerpoCircular c, BordesDelimitados bordes, ContactoColision m){
+
+    /**
+     * Detecta si existe una colisión entre un cuerpo circular (Bola) y los bordes
+     * de un área rectangular (Mesa).
+     * <p>
+     * Se evalúan las cuatro paredes (superior, inferior, izquierda, derecha) para
+     * encontrar
+     * la mayor penetración y establecer la normal de colisión correcta.
+     * </p>
+     *
+     * @param c      El cuerpo circular (implementa CuerpoCircular).
+     * @param bordes La estructura que define los límites rectangulares (implementa
+     *               BordesDelimitados).
+     * @param m      Objeto ContactoColision que será rellenado si la colisión
+     *               ocurre.
+     * @return {@code true} si hay colisión, {@code false} en caso contrario.
+     */
+    public static boolean circuloVsBordes(CuerpoCircular c, BordesDelimitados bordes, ContactoColision m) {
         // Centro actual de la bola
         Vec2D posicion = ((Cuerpo) c).getPosicion();
         // Radio de la mesa
         double radio = c.getRadio();
 
-        //Posición de las paredes de la mesa
+        // Posición de las paredes de la mesa
         double izquierda = bordes.getBordeIzquierdo(), derecha = bordes.getBordeDerecho(),
-        arriba = bordes.getBordeSuperior(), abajo = bordes.getBordeInferior();
+                arriba = bordes.getBordeSuperior(), abajo = bordes.getBordeInferior();
 
-        /*Cuánto se "mete" la bola en cada pared.
-        Un valor > 0 indica que ya se encuentra dentro de la zona de la pared. */
+        /*
+         * Cuánto se "mete" la bola en cada pared.
+         * Un valor > 0 indica que ya se encuentra dentro de la zona de la pared.
+         */
         double penetracionParedIzq = izquierda - (posicion.x - radio);
         double penetracionParedDer = (posicion.x + radio) - derecha;
         double penetracionParedSup = arriba - (posicion.y - radio);
@@ -33,9 +64,9 @@ public class DetectorColisiones {
         // Colisión con pared izquierda.
         if (penetracionParedIzq > maxPen) {
             maxPen = penetracionParedIzq;
-            colisionNormal = Vec2D.crearVector(-1, 0); 
+            colisionNormal = Vec2D.crearVector(-1, 0);
         }
-        
+
         // Colisión con pared derecha.
         if (penetracionParedDer > maxPen) {
             maxPen = penetracionParedDer;
@@ -45,7 +76,7 @@ public class DetectorColisiones {
         // Colisión con pared superior.
         if (penetracionParedSup > maxPen) {
             maxPen = penetracionParedSup;
-            colisionNormal = Vec2D.crearVector(0,-1);
+            colisionNormal = Vec2D.crearVector(0, -1);
         }
 
         // Colisión con pared inferior.
@@ -55,7 +86,7 @@ public class DetectorColisiones {
         }
 
         // Si alguna penetración es positiva, hubo colisión contra alguna pared.
-        if (maxPen > 0){
+        if (maxPen > 0) {
             m.vectorNormal = colisionNormal; // Normal de colisión usada para corregir la posición de la bola.
             m.traslape = maxPen; // Qué tanto se ha metido dentro de la pared.
             // vRel = vB - vA; para pared vB=0 -> vRel = -vA
@@ -66,11 +97,23 @@ public class DetectorColisiones {
         return false;
     }
 
-    // Detecta si existe colisión entre dos bolas cuando sus radios se sobreponen
-    public static boolean circuloVsCirculo(CuerpoCircular x, CuerpoCircular y, ContactoColision contacto){
+    /**
+     * Detecta si existe colisión entre dos cuerpos circulares cuando sus radios se
+     * sobreponen.
+     * <p>
+     * La normal de colisión apunta desde el centro de A hacia el centro de B.
+     * </p>
+     *
+     * @param a        El primer cuerpo circular (implementa CuerpoCircular).
+     * @param b        El segundo cuerpo circular (implementa CuerpoCircular).
+     * @param contacto Objeto ContactoColision que será rellenado si la colisión
+     *                 ocurre.
+     * @return {@code true} si hay colisión, {@code false} en caso contrario.
+     */
+    public static boolean circuloVsCirculo(CuerpoCircular x, CuerpoCircular y, ContactoColision contacto) {
         // Vector que va desde el centro de A al centro de B
-        Cuerpo a = (Cuerpo)x;
-        Cuerpo b = (Cuerpo)y;
+        Cuerpo a = (Cuerpo) x;
+        Cuerpo b = (Cuerpo) y;
         Vec2D vectorCentroA2CentroB = b.getPosicion().restaVectores(a.getPosicion());
 
         // Distancia entre los centros
@@ -79,11 +122,13 @@ public class DetectorColisiones {
 
         // Si la distancia entre radios es mayor o igual que la suma de sus radios,
         // no existe colisión
-        if (distanciaEntreCentros >= sumaDeRadios) return false;
+        if (distanciaEntreCentros >= sumaDeRadios)
+            return false;
 
         // Cálculo de la colisión
-        contacto.vectorNormal = (distanciaEntreCentros == 0) ? Vec2D.crearVector(1, 0) : vectorCentroA2CentroB.escalarXVector(1.0/distanciaEntreCentros);
-        
+        contacto.vectorNormal = (distanciaEntreCentros == 0) ? Vec2D.crearVector(1, 0)
+                : vectorCentroA2CentroB.escalarXVector(1.0 / distanciaEntreCentros);
+
         // Cáluclo del que tanto se sobrepineron sus radios
         contacto.traslape = sumaDeRadios - distanciaEntreCentros;
 
