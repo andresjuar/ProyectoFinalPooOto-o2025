@@ -1,9 +1,12 @@
-package fisica.main;
+package juego.entidades;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import libreria.dinamica.Cuerpo;
+import libreria.matematicas.Vec2D;
 
 public class Bola extends Cuerpo {
     private final double radio;

@@ -1,7 +1,7 @@
-package fisica.colision_basica;
+package libreria.colision_basica;
 
-import fisica.main.Cuerpo;
-import fisica.main.Vec2D;
+import libreria.dinamica.Cuerpo;
+import libreria.matematicas.Vec2D;
 
 public class ContactoColision{
     public final Cuerpo A, B;

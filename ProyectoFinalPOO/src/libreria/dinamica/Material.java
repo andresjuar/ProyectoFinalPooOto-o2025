@@ -1,4 +1,4 @@
-package fisica.main;
+package libreria.dinamica;
 
 /*
     Material físico que define cómo se comporta una bola o el taco

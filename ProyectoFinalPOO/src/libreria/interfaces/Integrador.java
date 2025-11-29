@@ -1,4 +1,4 @@
-package fisica.mundo;
+package libreria.interfaces;
 
 @FunctionalInterface
 public interface Integrador {

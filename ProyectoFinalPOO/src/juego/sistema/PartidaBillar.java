@@ -1,10 +1,11 @@
-package juego;
+package juego.sistema;
 
-import fisica.main.Bola;
-import fisica.main.GrupoBola;
-import fisica.main.TipoBola;
 import java.util.ArrayList;
 import java.util.List;
+
+import juego.entidades.Bola;
+import juego.entidades.GrupoBola;
+import juego.entidades.TipoBola;
 
 public class PartidaBillar {
     private final Jugador j1;

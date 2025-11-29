@@ -1,14 +1,15 @@
-package fisica.mundo;
+package libreria.dinamica;
 
-import fisica.colision_basica.*;
-import fisica.main.Bola;
-import fisica.main.Cuerpo;
-import fisica.main.EventoTroneraListener;
-import fisica.main.Mesa;
-import fisica.main.Tronera;
-import fisica.main.Vec2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import juego.entidades.Bola;
+import juego.entidades.Mesa;
+import juego.entidades.Tronera;
+import juego.eventos.EventoTroneraListener;
+import libreria.colision_basica.*;
+import libreria.interfaces.Integrador;
+import libreria.matematicas.Vec2D;
 
 /* Contiene y gestiona todos los cuerpos de la mesa de billar */
 public class MundoFisico {

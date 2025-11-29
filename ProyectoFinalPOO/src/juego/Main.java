@@ -2,6 +2,8 @@ package juego;
 
 import javax.swing.JFrame;
 
+import juego.ui.GamePanel;
+
 public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame();

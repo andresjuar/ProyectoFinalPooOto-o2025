@@ -1,9 +1,10 @@
-package juego;
+package juego.entidades;
 
-import fisica.main.Bola;
-import fisica.main.Material;
-import fisica.main.Vec2D;
 import java.awt.*;
+
+import juego.ui.MouseHandler;
+import libreria.dinamica.Material;
+import libreria.matematicas.Vec2D;
 
 public class Taco{
     private final Bola blanca;

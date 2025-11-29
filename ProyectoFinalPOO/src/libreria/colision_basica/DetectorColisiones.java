@@ -1,6 +1,8 @@
-package fisica.colision_basica;
+package libreria.colision_basica;
 
-import fisica.main.*;
+import juego.entidades.Bola;
+import juego.entidades.Mesa;
+import libreria.matematicas.Vec2D;
 
 public class DetectorColisiones {
     // Detecta si existe una colisión entre una bola y las paredes de la mesa.

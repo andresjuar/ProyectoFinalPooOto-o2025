@@ -1,4 +1,4 @@
-package fisica.main;
+package libreria.matematicas;
 
 import java.util.Objects;
 

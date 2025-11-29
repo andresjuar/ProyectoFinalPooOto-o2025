@@ -1,6 +1,6 @@
-package juego;
+package juego.sistema;
 
-import fisica.main.GrupoBola;
+import juego.entidades.GrupoBola;
 
 public class Jugador {
     private final String nombre;

@@ -1,8 +1,7 @@
-package fisica.main;
+package libreria.dinamica;
 
-import fisica.mundo.Actualizable;
-import fisica.mundo.AplicarFuerza;
-import fisica.mundo.Config;
+import libreria.interfaces.Actualizable;
+import libreria.matematicas.Vec2D;
 
 public abstract class Cuerpo implements Cloneable, Actualizable, AplicarFuerza{
     protected final String id;

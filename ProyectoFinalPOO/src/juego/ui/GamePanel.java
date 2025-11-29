@@ -1,8 +1,5 @@
-package juego;
+package juego.ui;
 
-import fisica.main.*;
-import fisica.mundo.Config;
-import fisica.mundo.MundoFisico;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,6 +9,16 @@ import java.awt.Window;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import juego.entidades.Bola;
+import juego.entidades.GrupoBola;
+import juego.entidades.Mesa;
+import juego.entidades.Taco;
+import juego.entidades.Tronera;
+import juego.sistema.Jugador;
+import juego.sistema.PartidaBillar;
+import libreria.dinamica.*;
+import libreria.matematicas.Vec2D;
 
 public class GamePanel extends JPanel implements Runnable{
     // CONFIGURACIÓN DE PANTALLA

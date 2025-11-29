@@ -1,7 +1,8 @@
-package fisica.colision_basica;
+package libreria.colision_basica;
 
-import fisica.main.*;
-import fisica.mundo.*;
+import libreria.dinamica.*;
+import libreria.interfaces.*;
+import libreria.matematicas.Vec2D;
 
 public class ResolverColisiones {
     /* 

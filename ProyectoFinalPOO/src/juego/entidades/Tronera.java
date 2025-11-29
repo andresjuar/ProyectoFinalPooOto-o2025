@@ -1,7 +1,9 @@
-package fisica.main;
+package juego.entidades;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+
+import libreria.matematicas.Vec2D;
 
 public class Tronera{
     private final Vec2D centro;

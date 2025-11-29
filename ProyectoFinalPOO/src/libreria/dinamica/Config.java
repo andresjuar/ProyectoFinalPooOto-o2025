@@ -1,6 +1,6 @@
-package fisica.mundo;
+package libreria.dinamica;
 
-import fisica.main.Vec2D;
+import libreria.matematicas.Vec2D;
 
 /*
     Clase de configuración global de la simulación física.

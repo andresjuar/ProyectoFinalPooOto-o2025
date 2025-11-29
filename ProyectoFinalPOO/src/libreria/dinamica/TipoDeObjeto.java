@@ -1,4 +1,4 @@
-package fisica.main;
+package libreria.dinamica;
 
 /*
     Identifica si un cuerpo es dinámico (se mueve y responde a fuerzas)

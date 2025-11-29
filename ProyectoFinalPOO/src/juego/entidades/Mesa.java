@@ -1,7 +1,11 @@
-package fisica.main;
+package juego.entidades;
 
 import java.awt.*;
 import java.util.ArrayList;
+
+import libreria.dinamica.Cuerpo;
+import libreria.dinamica.TipoDeObjeto;
+import libreria.matematicas.Vec2D;
 
 public class Mesa extends Cuerpo{
     // Atributos
