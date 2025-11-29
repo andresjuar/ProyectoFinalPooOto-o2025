@@ -1,6 +1,5 @@
 package libreria.colision_basica;
 
-import juego.entidades.Bola;
 import libreria.dinamica.Cuerpo;
 import libreria.interfaces.BordesDelimitados;
 import libreria.interfaces.CuerpoCircular;
