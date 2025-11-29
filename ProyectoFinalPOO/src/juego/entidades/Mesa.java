@@ -5,9 +5,10 @@ import java.util.ArrayList;
 
 import libreria.dinamica.Cuerpo;
 import libreria.dinamica.TipoDeObjeto;
+import libreria.interfaces.BordesDelimitados;
 import libreria.matematicas.Vec2D;
 
-public class Mesa extends Cuerpo{
+public class Mesa extends Cuerpo implements BordesDelimitados{
     // Atributos
     private final double ancho, alto;
     private final ArrayList<Tronera> troneras = new ArrayList<>();

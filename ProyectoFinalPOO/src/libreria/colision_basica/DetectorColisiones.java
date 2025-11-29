@@ -1,21 +1,22 @@
 package libreria.colision_basica;
 
 import juego.entidades.Bola;
-import juego.entidades.Mesa;
+import libreria.dinamica.Cuerpo;
+import libreria.interfaces.BordesDelimitados;
+import libreria.interfaces.CuerpoCircular;
 import libreria.matematicas.Vec2D;
 
 public class DetectorColisiones {
     // Detecta si existe una colisión entre una bola y las paredes de la mesa.
-    public static boolean bolaVsMesa(Bola c, Mesa mesa, ContactoColision m){
+    public static boolean circuloVsBordes(CuerpoCircular c, BordesDelimitados bordes, ContactoColision m){
         // Centro actual de la bola
-        Vec2D posicion = c.getPosicion();
-        
+        Vec2D posicion = ((Cuerpo) c).getPosicion();
         // Radio de la mesa
         double radio = c.getRadio();
 
         //Posición de las paredes de la mesa
-        double izquierda = mesa.getBordeIzquierdo(), derecha = mesa.getBordeDerecho(),
-        arriba = mesa.getBordeSuperior(), abajo = mesa.getBordeInferior();
+        double izquierda = bordes.getBordeIzquierdo(), derecha = bordes.getBordeDerecho(),
+        arriba = bordes.getBordeSuperior(), abajo = bordes.getBordeInferior();
 
         /*Cuánto se "mete" la bola en cada pared.
         Un valor > 0 indica que ya se encuentra dentro de la zona de la pared. */
@@ -59,7 +60,7 @@ public class DetectorColisiones {
             m.vectorNormal = colisionNormal; // Normal de colisión usada para corregir la posición de la bola.
             m.traslape = maxPen; // Qué tanto se ha metido dentro de la pared.
             // vRel = vB - vA; para pared vB=0 -> vRel = -vA
-            m.proyVelocidadRelEnNormal = -c.getVel().productoPunto(colisionNormal);
+            m.proyVelocidadRelEnNormal = -((Cuerpo) c).getVel().productoPunto(colisionNormal);
             return true;
         }
         // No se detectó colisión con ninguna pared.
@@ -67,13 +68,15 @@ public class DetectorColisiones {
     }
 
     // Detecta si existe colisión entre dos bolas cuando sus radios se sobreponen
-    public static boolean bolaVsBola(Bola a, Bola b, ContactoColision contacto){
+    public static boolean circuloVsCirculo(CuerpoCircular x, CuerpoCircular y, ContactoColision contacto){
         // Vector que va desde el centro de A al centro de B
+        Cuerpo a = (Cuerpo)x;
+        Cuerpo b = (Cuerpo)y;
         Vec2D vectorCentroA2CentroB = b.getPosicion().restaVectores(a.getPosicion());
 
         // Distancia entre los centros
         double distanciaEntreCentros = vectorCentroA2CentroB.magnitudVector();
-        double sumaDeRadios = a.getRadio() + b.getRadio();
+        double sumaDeRadios = x.getRadio() + y.getRadio();
 
         // Si la distancia entre radios es mayor o igual que la suma de sus radios,
         // no existe colisión

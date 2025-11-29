@@ -16,6 +16,7 @@ import juego.entidades.Mesa;
 import juego.entidades.Taco;
 import juego.entidades.Tronera;
 import juego.sistema.Jugador;
+import juego.sistema.SimuladorBillar;
 import juego.sistema.PartidaBillar;
 import libreria.dinamica.*;
 import libreria.matematicas.Vec2D;
@@ -35,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gameThread; // Hilo en el que corre el bucle principal del juego.
 
     // Motor & mundo
-    MundoFisico mundo = new MundoFisico();
+    SimuladorBillar mundo = new SimuladorBillar();
     Bola bolaBlanca;
     Mesa mesa;
     
@@ -291,7 +292,7 @@ public class GamePanel extends JPanel implements Runnable{
     // Reinicia el juego
     private void reiniciarPartida() {
         // Resetear el mundo físico
-        mundo = new MundoFisico();
+        mundo = new SimuladorBillar();
         bolaBlanca = null;
         mesa = null;
         taco = null;

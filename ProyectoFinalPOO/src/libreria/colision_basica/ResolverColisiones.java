@@ -1,7 +1,6 @@
 package libreria.colision_basica;
 
 import libreria.dinamica.*;
-import libreria.interfaces.*;
 import libreria.matematicas.Vec2D;
 
 public class ResolverColisiones {

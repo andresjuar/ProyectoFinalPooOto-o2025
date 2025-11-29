@@ -6,9 +6,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import libreria.dinamica.Cuerpo;
+import libreria.interfaces.CuerpoCircular;
 import libreria.matematicas.Vec2D;
 
-public class Bola extends Cuerpo {
+public class Bola extends Cuerpo implements CuerpoCircular{
     private final double radio;
     private TipoBola tipo;
     private Color color = Color.WHITE;

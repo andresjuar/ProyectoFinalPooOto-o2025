@@ -1,4 +1,4 @@
-package libreria.dinamica;
+package juego.sistema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,12 @@ import juego.entidades.Mesa;
 import juego.entidades.Tronera;
 import juego.eventos.EventoTroneraListener;
 import libreria.colision_basica.*;
+import libreria.dinamica.Cuerpo;
 import libreria.interfaces.Integrador;
 import libreria.matematicas.Vec2D;
 
 /* Contiene y gestiona todos los cuerpos de la mesa de billar */
-public class MundoFisico {
+public class SimuladorBillar {
     private final List<Cuerpo> cuerpos = new ArrayList<>();
     private final Integrador integrador = (obj, dt) -> obj.actualizar(dt);
     private Mesa mesaBillar;
@@ -89,7 +90,7 @@ public class MundoFisico {
                 ContactoColision contactoConMesa = new ContactoColision(bolaActual, mesaBillar);
 
                 // Si hay colisión contra las bandas/llantas de la mesa, la resolvemos
-                if (DetectorColisiones.bolaVsMesa(bolaActual, mesaBillar, contactoConMesa)) {
+                if (DetectorColisiones.circuloVsBordes(bolaActual, mesaBillar, contactoConMesa)) {
                     ResolverColisiones.resolver(contactoConMesa);
                 }
             }
@@ -98,7 +99,7 @@ public class MundoFisico {
                 Cuerpo cuerpoB = cuerpos.get(indiceCuerpoB);
                 if (cuerpoA instanceof Bola bolaA && cuerpoB instanceof Bola bolaB){
                     ContactoColision contactoEntreBolas = new ContactoColision(bolaA, bolaB);
-                    if(DetectorColisiones.bolaVsBola(bolaA, bolaB, contactoEntreBolas)){
+                    if(DetectorColisiones.circuloVsCirculo(bolaA, bolaB, contactoEntreBolas)){
                         ResolverColisiones.resolver(contactoEntreBolas);
                     }
                 }
