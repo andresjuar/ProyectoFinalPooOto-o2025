@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"libreria"},{"l":"libreria.colision_basica"},{"l":"libreria.dinamica"},{"l":"libreria.interfaces"},{"l":"libreria.matematicas"}];updateSearchResults();

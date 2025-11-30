@@ -3,12 +3,33 @@ package libreria.colision_basica;
 import libreria.dinamica.*;
 import libreria.matematicas.Vec2D;
 
+/**
+ * Clase estática encargada de resolver una colisión aplicando los principios
+ * de conservación de momento y corrigiendo la penetración geométrica.
+ * <p>
+ * Utiliza la información de un {@code ContactoColision} para calcular y aplicar
+ * los impulsos necesarios para cambiar las velocidades y la corrección de
+ * posición para separar los cuerpos tras el contacto.
+ * </p>
+ *
+ * 
+ * @version 1.0
+ */
 public class ResolverColisiones {
-    /* 
-        Resuelve una colisión usando los datos almacenados en contactoColision.
-        Corrige el traslape separando los cuerpos
-        Aplica un impulso para cambiar sus velocidades 
-    */
+    /**
+     * Resuelve una colisión aplicando el impulso y corrigiendo la penetración (traslape)
+     * entre los dos cuerpos involucrados.
+     * <p>
+     * El proceso consta de dos partes principales:
+     * 1. **Corrección del Impulso:** Modifica la velocidad de los cuerpos
+     * basándose en la velocidad relativa, el coeficiente de restitución
+     * (elasticidad) y sus masas.
+     * 2. **Corrección Posicional:** Mueve los cuerpos para eliminar el traslape
+     * geométrico, evitando que se peguen o atraviesen.
+     * </p>
+     *
+     * @param m El objeto {@code ContactoColision} que contiene toda la información de contacto.
+     */
     public static void resolver(ContactoColision m){
         Cuerpo A = m.A, B = m.B; // Cuerpos involucrados en la colisión
         

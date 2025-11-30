@@ -1,0 +1,31 @@
+<h1>Documentación del Proyecto: Motor de Billar y Librería de Física 2D</h1>
+
+<p>
+Este proyecto está organizado bajo el paradigma de <strong>Programación Orientada a Objetos (POO)</strong>, separando la simulación física genérica (Librería) de la lógica específica del juego de Billar (Juego).
+</p>
+
+<h2>Arquitectura del Proyecto</h2>
+
+<p>
+El diseño modular garantiza que el motor de física sea reutilizable y que la lógica del juego (reglas, UI) dependa de abstracciones.
+</p>
+
+<h3>Paquetes de la Librería Física (libreria.*)</h3>
+<p>
+El núcleo de la simulación. Estas clases no tienen conocimiento alguno sobre el billar.
+</p>
+<ul>
+    <li><b>libreria.dinamica:</b> Define el comportamiento de los cuerpos rígidos (Cuerpo, Material) y las constantes de la simulación.</li>
+    <li><b>libreria.colision_basica:</b> Contiene la lógica matemática para la detección y la respuesta a colisiones por impulso.</li>
+    <li><b>libreria.matematicas:</b> Ofrece herramientas de álgebra lineal 2D (Vec2D).</li>
+</ul>
+
+<h3>Paquetes de la Lógica del Juego (juego.*)</h3>
+<p>
+Gestiona las reglas, las entidades específicas del billar (Bola, Mesa, Tronera) y la interfaz de usuario.
+</p>
+<ul>
+    <li><b>juego.entidades:</b> Las clases que representan objetos del billar y extienden los Cuerpos de la librería.</li>
+    <li><b>juego.sistema:</b> Contiene la lógica de la partida y el simulador (SimuladorBillar).</li>
+    <li><b>juego.ui:</b> Gestión de la interfaz gráfica y la interacción del usuario.</li>
+</ul>
