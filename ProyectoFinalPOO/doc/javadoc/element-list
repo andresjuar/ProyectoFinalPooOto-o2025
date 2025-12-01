@@ -1,3 +1,8 @@
+juego
+juego.entidades
+juego.eventos
+juego.sistema
+juego.ui
 libreria
 libreria.colision_basica
 libreria.dinamica

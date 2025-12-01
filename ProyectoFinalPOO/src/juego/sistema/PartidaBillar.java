@@ -93,6 +93,8 @@ public class PartidaBillar {
         Decide si el jugador conserva el turno, si cambia de jugador
         o si la partida termina (por meter la 8 antes o después de tiempo).
     */
+
+
     public Jugador finDeTiro(){
         if (partidaTerminada) return null;
 
@@ -203,6 +205,8 @@ public class PartidaBillar {
     }
 
     // Asigna el grupo(lisas o rayadas) a un jugador, despues de meter su priemra bola
+
+
     private void setGrupos(Jugador jugador, GrupoBola grupo) {
         jugador.setGrupo(grupo);
         Jugador otro = obtenerOponente(jugador);
