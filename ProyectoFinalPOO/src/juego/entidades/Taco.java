@@ -6,31 +6,57 @@ import juego.ui.MouseHandler;
 import libreria.dinamica.Material;
 import libreria.matematicas.Vec2D;
 
+/**
+ * Representa el taco de billar, manejando la interacción del usuario (carga y disparo)
+ * para aplicar un impulso inicial a la bola blanca.
+ * <p>
+ * El taco traduce la entrada del mouse (dirección y tiempo de pulsación) a un vector
+ * de impulso físico que se aplica a la bola, afectando la simulación.
+ * </p>
+ *
+ */
 public class Taco{
+    /** Referencia a la bola blanca, el único cuerpo al que el taco puede aplicar impulso. */
     private final Bola blanca;
+    /** Material utilizado para determinar la restitución (factor de rebote) al momento del impacto. */
     private final Material material;
 
+    /** Magnitud actual de la potencia o impulso acumulado (0.0 a impulsoMaximo). */
     private double power = 0.0;
+    /** Indica si el jugador está actualmente cargando la potencia (mouse presionado). */
     private boolean charging = false;
 
-    // Potencia máxima del disparo, expresada como magnitud máxima del impulso aplicado a la bola.
+    /** Potencia máxima del disparo, expresada como magnitud máxima del impulso aplicado a la bola. */
     private final double impulsoMaximo = 140.0;
 
-    // Velocidad a la que aumenta la potencia mientras se mantiene presionado el mouse (impulso por segundo).
+    /* Velocidad a la que aumenta la potencia mientras se mantiene presionado el mouse (impulso por segundo). */
     private final double velocidadDeCarga = 280.0;
 
-    // Longitud visible del taco en pantalla, usada para el dibujo de la línea que representa el taco.
+    /*Longitud visible del taco en pantalla, usada para el dibujo de la línea que representa el taco.*/
     private final double longitudTaco = 80.0;
 
-    // Grosor visual del taco al dibujarlo, usado en el trazo de la línea.
+    /* Grosor visual del taco al dibujarlo, usado en el trazo de la línea. */
     private final double grosorTaco = 10.0;
 
+    /**
+     * Constructor del taco.
+     *
+     * @param blanca La instancia de la bola blanca.
+     * @param material El material usado para el cálculo del impulso (determina la elasticidad del golpe).
+     */
     public Taco(Bola blanca, Material material){
         this.blanca = blanca;
         this.material = material;
     }
 
     // Manejar carga y disparo con el mouse
+    /**
+     * Actualiza el estado de carga del taco y, si se libera el mouse, aplica el impulso a la bola.
+     *
+     * @param dt El delta de tiempo (tiempo transcurrido) para la integración de la potencia.
+     * @param mouse El manejador de eventos del mouse para la detección de pulsaciones.
+     * @param puedeTirar Indica si el juego permite el disparo (ej. si todas las bolas están en reposo).
+     */
     public void update(double dt, MouseHandler mouse, boolean puedeTirar){
         if (!puedeTirar) { // si hay bolas moviéndose, no mostrar ni cargar
             charging = false;
@@ -68,7 +94,18 @@ public class Taco{
         mouse.consumeEdgeTriggers();
     }
 
-    //Dibujo del taco y de una barrita de potencia simple
+
+    /**
+     * Dibujo del taco y de una barrita de potencia simple
+     * <p>
+     * El taco se dibuja como una línea proyectada en dirección opuesta al puntero del mouse,
+     * con un retroceso visual proporcional a la potencia cargada.
+     * </p>
+     *
+     * @param g El contexto gráfico 2D.
+     * @param mouse El manejador de mouse para obtener la posición del puntero.
+     * @param puedeTirar Indica si se debe mostrar el taco (solo se muestra si el jugador puede tirar).
+     */
     public void draw(Graphics2D g, MouseHandler mouse, boolean puedeTirar){
         if (!puedeTirar) return;
 

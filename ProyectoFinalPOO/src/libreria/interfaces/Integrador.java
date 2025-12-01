@@ -10,7 +10,7 @@ package libreria.interfaces;
 
  * </p>
  *
- * @author [Tu Nombre]
+ * 
  * @version 1.0
  */
 @FunctionalInterface

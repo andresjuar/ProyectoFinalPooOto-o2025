@@ -9,17 +9,44 @@ import libreria.dinamica.Cuerpo;
 import libreria.interfaces.CuerpoCircular;
 import libreria.matematicas.Vec2D;
 
-public class Bola extends Cuerpo implements CuerpoCircular{
+/**
+ * Representa una bola de billar específica en el juego.
+ * <p>
+ * {@code Bola} extiende {@link libreria.dinamica.Cuerpo} para heredar todas las
+ * propiedades físicas
+ * (masa, velocidad, posición) y aplica la interfaz
+ * {@link libreria.interfaces.CuerpoCircular}
+ * para permitir que el motor de colisiones de la librería la trate como un
+ * círculo.
+ * Además, maneja sus propiedades visuales (texturas) y de juego (TipoBola).
+ * </p>
+ *
+ * 
+ * @version 1.0
+ */
+
+public class Bola extends Cuerpo implements CuerpoCircular {
+    /** Radio de la bola (determina tanto la física como el dibujo). */
     private final double radio;
+    /** Tipo de bola según las reglas del billar (LISA, RAYADA, OCHO, BLANCA). */
     private TipoBola tipo;
+    /** Color de relleno por defecto si no se carga la textura. */
     private Color color = Color.WHITE;
 
     // Atributos para el diseño de las bolas
-    public BufferedImage uno, dos, tres, cuatro, cinco, seis, siete, ocho, 
-                        nueve, diez, once, doce, trece, catorce, quince, blanca;
+    public BufferedImage uno, dos, tres, cuatro, cinco, seis, siete, ocho,
+            nueve, diez, once, doce, trece, catorce, quince, blanca;
 
-    // Método Constructor
-    public Bola(String id, double masa, double radio, Vec2D posInicial){
+    /**
+     * Constructor de la bola. Inicializa las propiedades físicas y carga los
+     * recursos visuales.
+     *
+     * @param id         Identificador de la bola ("blanca", "ocho", "uno", etc.).
+     * @param masa       Masa de la bola (kg).
+     * @param radio      Radio de la bola (m).
+     * @param posInicial Posición inicial de la bola en el mundo físico.
+     */
+    public Bola(String id, double masa, double radio, Vec2D posInicial) {
         super(id, masa);
         this.radio = radio;
         this.posicion = posInicial.clone();
@@ -27,22 +54,42 @@ public class Bola extends Cuerpo implements CuerpoCircular{
         getImageBola();
     }
 
-    // Devuelve el radio visual de la bola.
-    public double getRadio(){
+    /**
+     * Devuelve el radio físico de la bola, requerido por la interfaz
+     * {@code CuerpoCircular}
+     * para la detección de colisiones.
+     *
+     * @return El radio de la bola.
+     */
+    @Override
+    public double getRadio() {
         return radio;
     }
 
-    // Actualiza el color de la bola 
-    public void setColor(Color c){
+    /**
+     * Establece un color de relleno para la bola. Utilizado
+     * si la carga de texturas falla.
+     *
+     * @param c El color.
+     */
+    public void setColor(Color c) {
         this.color = c;
     }
 
-    // Define el tipo de bola dependiendo del id de la bola
-    private TipoBola setTipoBola(String id){
-        if ("blanca".equals(id)) return TipoBola.BLANCA;
-        if ("ocho".equals(id)) return TipoBola.OCHO;
+    /**
+     * Define el tipo de bola (LISA, RAYADA, OCHO, BLANCA) basándose en su ID.
+     *
+     * @param id El ID de la bola ("uno" a "quince", "ocho", "blanca").
+     * @return El {@code TipoBola} asociado.
+     * @throws IllegalArgumentException Si el ID de la bola no es reconocido.
+     */
+    private TipoBola setTipoBola(String id) {
+        if ("blanca".equals(id))
+            return TipoBola.BLANCA;
+        if ("ocho".equals(id))
+            return TipoBola.OCHO;
 
-        switch(id){
+        switch (id) {
             case "uno":
             case "dos":
             case "tres":
@@ -61,18 +108,28 @@ public class Bola extends Cuerpo implements CuerpoCircular{
                 return TipoBola.RAYADA;
             default:
                 throw new IllegalArgumentException("Id de bola no válido: " + id);
-                
+
         }
     }
 
-    public TipoBola getTipo(){
+    /**
+     * Obtiene el tipo de bola.
+     *
+     * @return El {@code TipoBola} de esta instancia.
+     */
+    public TipoBola getTipo() {
         return tipo;
     }
 
-    //  Carga las imagenes que representan cada tipo de bola desde recursos
-    private void getImageBola(){
-        try{
-            
+    /**
+     * Carga todas las imágenes (texturas) que representan las 16 bolas de billar
+     * desde los recursos del proyecto.
+     * <p>
+     * Las imágenes cargadas se almacenan en los atributos {@code BufferedImage}.
+     * </p>
+     */
+    private void getImageBola() {
+        try {
 
             blanca = ImageIO.read(getClass().getResourceAsStream("/bolas/Bola_Blanca.png"));
             uno = ImageIO.read(getClass().getResourceAsStream("/bolas/Bola_1.png"));
@@ -91,14 +148,22 @@ public class Bola extends Cuerpo implements CuerpoCircular{
             catorce = ImageIO.read(getClass().getResourceAsStream("/bolas/Bola_14.png"));
             quince = ImageIO.read(getClass().getResourceAsStream("/bolas/Bola_15.png"));
 
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Dibuja la bola en el contexto gráfico
+    /**
+     * Dibuja la representación visual de la bola en el contexto gráfico 2D.
+     * <p>
+     * Intenta dibujar la {@code BufferedImage} correspondiente al ID de la bola.
+     * Si la imagen no se carga, dibuja un círculo simple con el color de fallback.
+     * </p>
+     *
+     * @param g El contexto gráfico 2D donde se dibuja.
+     */
     @Override
-    public void draw(Graphics2D g){
+    public void draw(Graphics2D g) {
         BufferedImage image = null;
 
         switch (id) {
@@ -151,26 +216,27 @@ public class Bola extends Cuerpo implements CuerpoCircular{
                 image = quince;
                 break;
             default:
-                int d = (int)Math.round(radio * 2);
+                int d = (int) Math.round(radio * 2);
                 g.setColor(color);
-                g.fillOval((int)(posicion.x - radio), (int)(posicion.y - radio), d, d);
+                g.fillOval((int) (posicion.x - radio), (int) (posicion.y - radio), d, d);
                 g.setColor(Color.BLACK);
-                g.drawOval((int)Math.round(posicion.x - radio), (int)Math.round(posicion.y - radio), d, d);
+                g.drawOval((int) Math.round(posicion.x - radio), (int) Math.round(posicion.y - radio), d, d);
                 return;
         }
         if (image != null) {
-            int d = (int)Math.round(radio * 2);
-            int x = (int)Math.round(posicion.x - radio);
-            int y = (int)Math.round(posicion.y - radio);
+            int d = (int) Math.round(radio * 2);
+            int x = (int) Math.round(posicion.x - radio);
+            int y = (int) Math.round(posicion.y - radio);
             g.drawImage(image, x, y, d, d, null);
             g.setColor(Color.BLACK);
             g.drawOval(x, y, d, d);
-        }else {
+        } else {
             // Si no se cargó la textura esperada, usa fallback
-            int d = (int)Math.round(radio * 2);
+            int d = (int) Math.round(radio * 2);
             g.setColor(color);
-            g.fillOval((int)(posicion.x - radio), (int)(posicion.y - radio), d, d);
+            g.fillOval((int) (posicion.x - radio), (int) (posicion.y - radio), d, d);
             g.setColor(Color.BLACK);
-            g.drawOval((int)Math.round(posicion.x - radio), (int)Math.round(posicion.y - radio), d, d);
-        }    }
+            g.drawOval((int) Math.round(posicion.x - radio), (int) Math.round(posicion.y - radio), d, d);
+        }
+    }
 }
