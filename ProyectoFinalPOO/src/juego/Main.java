@@ -28,7 +28,7 @@ public class Main {
      * 5. Inicia el bucle de juego en un hilo separado.
      * </p>
      *
-     * @param args Argumentos de la línea de comandos (no utilizados).
+     * @param args No utilizados
      */
     public static void main(String[] args) {
         JFrame window = new JFrame();
