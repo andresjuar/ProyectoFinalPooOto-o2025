@@ -1,5 +1,7 @@
 package juego.sistema;
-
+/**
+ * 
+ */
 import juego.entidades.GrupoBola;
 
 public class Jugador {
@@ -7,6 +9,10 @@ public class Jugador {
     private GrupoBola grupo = GrupoBola.SIN_ASIGNAR;
 
     // Constructor para crear un jugador
+    /**
+     * Constructor de la clase 
+     * @param nombre Cadena de texto 
+     */
     public Jugador(String nombre){
         this.nombre = nombre;
     }

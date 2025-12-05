@@ -52,7 +52,6 @@ public abstract class Cuerpo implements Cloneable, Actualizable, AplicarFuerza {
      * @param id   Identificador único.
      * @param masa Masa del cuerpo en kilogramos.
      */
-
     protected Cuerpo(String id, double masa) {
         this.id = id;
         this.masa = masa;

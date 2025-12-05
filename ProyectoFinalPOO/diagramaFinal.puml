@@ -1,0 +1,161 @@
+@startuml Proyecto_POO_Vista_Optimizada
+
+' ===================================
+' === Ajustes importantes del layout ===
+' ===================================
+
+' left to right direction     ' Orden horizontal
+skinparam linetype ortho    ' Líneas rectas sin cruces raros
+skinparam ranksep 60        ' Espacio vertical entre capas
+skinparam nodesep 50        ' Espacio horizontal
+skinparam classAttributeIconSize 0
+hide fields
+hide members
+
+
+' ===================================
+' === Agrupación visual en capas ===
+' ===================================
+
+rectangle " " as LIB {
+    package libreria {
+        package libreria.dinamica {
+            class Config
+            abstract class Cuerpo
+            interface AplicarFuerza
+            enum Material
+            enum TipoDeObjeto
+        }
+
+        package libreria.colision_basica {
+            class ContactoColision
+            class DetectorColisiones
+            class ResolverColisiones
+        }
+
+        package libreria.interfaces {
+            interface Actualizable
+            interface BordesDelimitados
+            interface CuerpoCircular
+            interface Integrador
+        }
+
+        package libreria.matematicas {
+            class Vec2D
+        }
+    }
+}
+
+rectangle " " as GAME {
+    package juego {
+        package juego.entidades {
+            class Bola
+            enum GrupoBola
+            class Mesa
+            enum TipoBola
+            class Taco
+            class Tronera
+        }
+
+        package juego.eventos {
+            interface EventoTroneraListener
+        }
+
+        package juego.sistema {
+            class Jugador
+            class PartidaBillar
+            class SimuladorBillar
+        }
+
+        package juego.ui {
+            class GamePanel
+            class MouseHandler
+        }
+
+        class Main
+    }
+
+    ' Interfaces de Java
+    interface MouseListener
+    interface MouseMotionListener
+}
+
+' ===================================
+' === RELACIONES ===
+' ===================================
+
+' --- Herencia / Implementación ---
+Bola -up-|> Cuerpo
+Taco -up-|> Cuerpo
+Bola .up.|> CuerpoCircular
+Mesa -up-|> Cuerpo
+Mesa .up.|> BordesDelimitados
+PartidaBillar .up.|> EventoTroneraListener
+
+Cuerpo .up.|> Actualizable
+Cuerpo .up.|> AplicarFuerza
+MouseHandler .up.|> MouseListener
+MouseHandler .up.|> MouseMotionListener
+
+
+' --- Composición / Agregación ---
+GamePanel *-- SimuladorBillar
+GamePanel *-- PartidaBillar
+GamePanel *-- MouseHandler
+GamePanel *-- Mesa
+GamePanel *-- Taco
+GamePanel "1" *-- "16" Bola
+
+PartidaBillar *-- Jugador
+Jugador *-- GrupoBola
+SimuladorBillar *-- Integrador
+
+Mesa *-- Tronera
+Bola *-- TipoBola
+Taco o-- Bola
+Taco *-- Material
+Tronera *-- Vec2D
+
+ContactoColision o-- Cuerpo
+ContactoColision *-- Vec2D
+Cuerpo *-- Vec2D
+Cuerpo *-- TipoDeObjeto
+DetectorColisiones --> ContactoColision
+
+
+' --- Dependencias (uso) ---
+SimuladorBillar ..> EventoTroneraListener
+SimuladorBillar ..> Cuerpo
+SimuladorBillar ..> Mesa
+SimuladorBillar ..> DetectorColisiones
+SimuladorBillar ..> ResolverColisiones
+SimuladorBillar ..> Vec2D
+SimuladorBillar ..> Config
+
+PartidaBillar ..> Bola
+PartidaBillar ..> GrupoBola
+PartidaBillar ..> TipoBola
+
+GamePanel ..> Vec2D
+GamePanel ..> Config
+GamePanel ..> GrupoBola
+
+Cuerpo ..> Material
+Cuerpo ..> Config
+
+ResolverColisiones .left.- ContactoColision
+ResolverColisiones ..> Cuerpo
+ResolverColisiones ..> Vec2D
+ResolverColisiones ..> Config
+
+DetectorColisiones ..> CuerpoCircular
+DetectorColisiones ..> BordesDelimitados
+DetectorColisiones ..> Vec2D
+
+Config ..> Vec2D
+
+Taco ..> MouseHandler
+Tronera ..> Bola
+Main ..> GamePanel
+
+@enduml

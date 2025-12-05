@@ -1,0 +1,30 @@
+@startuml Proyecto_POO
+skinparam classAttributeIconSize 0
+
+class Bola {
+            - radio : double
+            - color : Color
+            /' - uno : BufferedImage
+            - dos : BufferedImage
+            - tres : BufferedImage
+            - cuatro : BufferedImage
+            - cinco : BufferedImage
+            - seis : BufferedImage
+            - siete : BufferedImage
+            - ocho : BufferedImage
+            - nueve : BufferedImage
+            - diez : BufferedImage
+            - once : BufferedImage
+            - doce : BufferedImage
+            - trece : BufferedImage
+            - catorce : BufferedImage
+            - quince : BufferedImage
+            - blanca : BufferedImage '/
+
+            + Bola(id : String, masa : double, radio : double, posInicial : Vec2D)
+            + getRadio() : double
+            + setColor(c : Color) : void
+            + getImageBola() : void
+            + draw(g : Graphics2D) : void
+        }
+@enduml

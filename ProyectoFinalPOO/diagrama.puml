@@ -1,7 +1,8 @@
 @startuml Proyecto_POO
 skinparam classAttributeIconSize 0
-
-
+hide fields
+hide members
+package libreria{}
 package fisica {
     package colision_basica{
         class ContactoColision {

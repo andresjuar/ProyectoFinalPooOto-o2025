@@ -1,6 +1,6 @@
 /**
  * Este paquete define las entidades específicas del juego de billar
- * que interactúan con el motor de física proporcionado por la librería {@code libreria.*}.
+ * que interactúan con el motor de física proporcionado por la librería {@code libreria}.
  * <p>
  * Las clases en este paquete representan los elementos físicos y lógicos del juego:
  * <ul>
@@ -12,6 +12,5 @@
  * </ul>
  * </p>
  *
-
  */
 package juego.entidades;
